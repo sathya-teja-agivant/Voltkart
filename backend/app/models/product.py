@@ -22,6 +22,7 @@ class Product(Base):
     operating_system: Mapped[str] = mapped_column(String(100), nullable=False)
     price: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False)
     warranty: Mapped[str] = mapped_column(String(100), default="1 year")
+    image_url: Mapped[str] = mapped_column(String(255), nullable=True, default=None)
     stock_status: Mapped[str] = mapped_column(String(30), default="IN_STOCK", index=True)
     description: Mapped[str] = mapped_column(Text, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))

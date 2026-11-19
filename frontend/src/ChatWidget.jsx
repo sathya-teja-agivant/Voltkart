@@ -343,6 +343,16 @@ export default function ChatWidget({
 
                             return (
                               <article className="widget-product-card" key={p.product_id || idx}>
+                                {p.image_url ? (
+                                  <div className="widget-product-media">
+                                    <img
+                                      src={p.image_url}
+                                      alt={p.product_name}
+                                      className="widget-product-thumb"
+                                      onError={(e) => { e.currentTarget.parentElement.style.display = 'none'; }}
+                                    />
+                                  </div>
+                                ) : null}
                                 <div className="widget-card-top">
                                   <span className="widget-brand">{p.brand}</span>
                                   <span className="widget-price">₹{priceNum.toLocaleString('en-IN')}</span>

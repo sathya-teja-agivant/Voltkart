@@ -532,7 +532,20 @@ export default function ProductsPage({ onOpenChat, onOpenAdmin, onAskAboutProduc
 
                     {/* Card Media Preview */}
                     <div className="card-media">
-                      <div className="laptop-preview-icon">
+                      {p.image_url ? (
+                        <img
+                          src={p.image_url}
+                          alt={p.product_name}
+                          className="product-card-img"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const fallback = e.currentTarget.parentElement?.querySelector('.laptop-preview-icon');
+                            if (fallback) fallback.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div className="laptop-preview-icon" style={{ display: p.image_url ? 'none' : 'flex' }}>
                         <Laptop size={46} strokeWidth={1.4} />
                       </div>
                       <button
@@ -676,6 +689,16 @@ export default function ProductsPage({ onOpenChat, onOpenAdmin, onAskAboutProduc
             </div>
 
             <div className="modal-body">
+              {quickViewProduct.image_url && (
+                <div className="modal-product-img-box">
+                  <img
+                    src={quickViewProduct.image_url}
+                    alt={quickViewProduct.product_name}
+                    className="modal-product-img"
+                    onError={(e) => { e.currentTarget.parentElement.style.display = 'none'; }}
+                  />
+                </div>
+              )}
               {quickViewProduct.description && (
                 <div className="product-desc-box">
                   <p>{quickViewProduct.description}</p>

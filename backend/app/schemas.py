@@ -29,6 +29,7 @@ class ProductOut(BaseModel):
     warranty: str
     stock_status: str
     description: str
+    image_url: Optional[str] = None
 
     model_config = {"from_attributes": True}
 
@@ -154,6 +155,7 @@ class ProductCreate(BaseModel):
     warranty: str = Field(default="1 year manufacturer warranty", max_length=100)
     stock_status: StockStatus = "IN_STOCK"
     description: str = ""
+    image_url: Optional[str] = None
 
 
 class ProductUpdate(BaseModel):
@@ -171,6 +173,7 @@ class ProductUpdate(BaseModel):
     warranty: Optional[str] = Field(default=None, max_length=100)
     stock_status: Optional[StockStatus] = None
     description: Optional[str] = None
+    image_url: Optional[str] = None
 
 
 class PolicyCreate(BaseModel):

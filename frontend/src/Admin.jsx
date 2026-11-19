@@ -16,12 +16,14 @@ const PRODUCT_FIELDS = [
   ['operating_system', 'Operating system', 'text'],
   ['price', 'Price (₹)', 'number'],
   ['warranty', 'Warranty', 'text'],
+  ['image_url', 'Image URL', 'text'],
 ]
 
 const EMPTY_PRODUCT = {
   product_name: '', brand: '', processor: '', ram: '16', storage: '512', display_size: '15.6',
   battery_life: '8', weight: '1.6', operating_system: 'Windows 11', price: '',
   warranty: '1 year manufacturer warranty', stock_status: 'IN_STOCK', description: '',
+  image_url: '',
 }
 
 function ProductsTab({ notify }) {

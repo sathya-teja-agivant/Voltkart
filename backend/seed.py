@@ -7,6 +7,48 @@ from app.models import Product, Policy, User
 
 Base.metadata.create_all(bind=engine)
 
+# Ensure the new image_url column exists for existing databases
+from sqlalchemy import text
+with engine.begin() as conn:
+    conn.execute(text('ALTER TABLE products ADD COLUMN IF NOT EXISTS image_url VARCHAR(255)'))
+
+# Generate image URLs on‑the‑fly using Unsplash (no API key needed)
+import urllib.parse
+
+def unsplash_image_url(name: str) -> str:
+    # Encode the name for a URL query and request a 400x300 featured image
+    query = urllib.parse.quote_plus(name)
+    return f"https://source.unsplash.com/featured/400x300?{query}"
+
+    # No static product_images dict – URLs will be generated dynamically via Unsplash.
+
+    "Vostro 3520": "https://example.com/images/vostro3520.jpg",
+    "IdeaPad Slim 3": "https://example.com/images/ideapad_slim3.jpg",
+    "IdeaPad Slim 5": "https://example.com/images/ideapad_slim5.jpg",
+    "LOQ 15": "https://example.com/images/loq15.jpg",
+    "Pavilion 14": "https://example.com/images/pavilion14.jpg",
+    "15s-fq": "https://example.com/images/15sfq.jpg",
+    "Victus 15": "https://example.com/images/victus15.jpg",
+    "Vivobook 15": "https://example.com/images/vivobook15.jpg",
+    "Zenbook 14": "https://example.com/images/zenbook14.jpg",
+    "Aspire 5": "https://example.com/images/aspire5.jpg",
+    "Swift Go 14": "https://example.com/images/swiftgo14.jpg",
+    "MacBook Air M2": "https://example.com/images/macbookairm2.jpg",
+    "MacBook Air M3": "https://example.com/images/macbookairm3.jpg",
+    "Aspire Lite": "https://example.com/images/asplite.jpg",
+    "ThinkBook 14": "https://example.com/images/thinkbook14.jpg",
+    "ExpertBook B1": "https://example.com/images/expertbookb1.jpg",
+    "TravelMate P2": "https://example.com/images/travelmatep2.jpg",
+    "VivoBook Go 15": "https://example.com/images/vivobookgo15.jpg",
+    "ThinkPad E14": "https://example.com/images/thinkpade14.jpg",
+    "Inspiron 14": "https://example.com/images/inspiron14.jpg",
+    "Aspire 3": "https://example.com/images/aspire3.jpg",
+    "Pavilion Plus 14": "https://example.com/images/pavilionplus14.jpg",
+    "TUF Gaming F15": "https://example.com/images/tufgamingf15.jpg",
+    "Swift 3": "https://example.com/images/swift3.jpg",
+}
+
+
 products = [
     ("Inspiron 15 3530", "Dell", "Intel Core i5-1334U", 16, 512, 15.6, 8.0, 1.65, "Windows 11", 56990, "IN_STOCK", "Everyday productivity laptop."),
     ("Vostro 3520", "Dell", "Intel Core i5-1235U", 16, 512, 15.6, 7.0, 1.66, "Windows 11", 52990, "IN_STOCK", "Business-focused laptop."),
@@ -60,10 +102,15 @@ with SessionLocal() as db:
                 product_name=name, brand=brand, category="Laptop", processor=processor,
                 ram=ram, storage=storage, display_size=display, battery_life=battery,
                 weight=weight, operating_system=os_name, price=price, stock_status=stock,
-                description=description, warranty="1 year manufacturer warranty"
+                description=description, warranty="1 year manufacturer warranty",
+                image_url=product_images.get(name)
             ))
 
-    # Upsert FAQ entries by title so re-running the seed on an existing database
+    # Update image URLs for existing products (in case they were seeded earlier without URLs)
+    for name, url in product_images.items():
+        db.query(Product).filter(Product.product_name == name, Product.image_url == None).update({Product.image_url: url})
+    db.commit()
+
     # adds the new entries and refreshes edited ones.
     existing = {p.title: p for p in db.query(Policy).all()}
     for title, category, content in policies:

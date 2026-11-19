@@ -156,6 +156,7 @@ def _json_product(product: Product) -> dict:
         "stock_status": product.stock_status,
         "warranty": product.warranty,
         "description": product.description,
+        "image_url": product.image_url,
     }
 
 
