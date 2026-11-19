@@ -4,7 +4,7 @@ from sqlalchemy import text
 from app.database.connection import engine
 from app.database.base import Base
 from app import models  # noqa: F401
-from app.routers import products, conversations, chat
+from app.routers import products, conversations, chat, auth, admin
 
 app = FastAPI(
     title="VoltKart AI Shopping Assistant",
@@ -43,3 +43,9 @@ def db_check():
         return {"database": "connected"}
     except Exception:
         return {"database": "disconnected"}
+
+app.include_router(auth.router, prefix="/api/v1")
+app.include_router(products.router, prefix="/api/v1")
+app.include_router(conversations.router, prefix="/api/v1")
+app.include_router(chat.router, prefix="/api/v1")
+app.include_router(admin.router, prefix="/api/v1")

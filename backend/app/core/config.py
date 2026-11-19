@@ -11,6 +11,11 @@ class Settings(BaseSettings):
     groq_api_key: str = ""
     groq_model: str = "openai/gpt-oss-120b"
 
+    jwt_secret: str
+    jwt_expire_minutes: int = 480
+    admin_email: str = ""
+    admin_password: str = ""
+
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",
         env_file_encoding="utf-8",
@@ -24,6 +29,13 @@ class Settings(BaseSettings):
         for prefix in ("postgresql://", "postgres://"):
             if value.startswith(prefix):
                 return "postgresql+psycopg://" + value[len(prefix):]
+        return value
+
+    @field_validator("jwt_secret")
+    @classmethod
+    def _strong_secret(cls, value: str) -> str:
+        if len(value) < 32:
+            raise ValueError("JWT_SECRET must be at least 32 characters")
         return value
 
 

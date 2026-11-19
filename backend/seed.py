@@ -1,7 +1,9 @@
+from app.core.config import settings
+from app.core.security import hash_password
 from app.database.connection import engine, SessionLocal
 from app.database.base import Base
 from app import models
-from app.models import Product, Policy
+from app.models import Product, Policy, User
 
 Base.metadata.create_all(bind=engine)
 
@@ -70,6 +72,15 @@ with SessionLocal() as db:
             row.category, row.content, row.is_active = category, content, True
         else:
             db.add(Policy(title=title, category=category, content=content, is_active=True))
+        # Bootstrap the first admin from .env (admins can never self-register).
+    if settings.admin_email and settings.admin_password:
+        admin_email = settings.admin_email.strip().lower()
+        if not db.query(User).filter(User.email == admin_email).first():
+            db.add(User(
+                email=admin_email, full_name="VoltKart Admin",
+                password_hash=hash_password(settings.admin_password), role="ADMIN",
+            ))
+            print(f"Created admin user {admin_email}")
     db.commit()
 
 print("VoltKart seed data inserted.")
