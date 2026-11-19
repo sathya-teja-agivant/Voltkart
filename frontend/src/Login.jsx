@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Laptop } from 'lucide-react'
 import { errorMessage } from './api'
 import { useAuth } from './auth'
+import logo from './assets/logo.png'
 
 export default function Login() {
   const { login, register } = useAuth()
@@ -28,9 +29,21 @@ export default function Login() {
 
   return (
     <div className="auth-wrap">
+      <aside className="auth-hero">
+<div className="brand"><img className="brand-logo" src={logo} alt="VoltKart" height={40} width={40} /><span>VoltKart</span></div>        <div className="hero-copy">
+          <h2>Find the right laptop, without the guesswork.</h2>
+          <p>Tell the assistant your budget and how you work. It searches the VoltKart catalog and explains its picks.</p>
+          <ul className="hero-points">
+            <li>Recommendations from real catalog specs</li>
+            <li>Side-by-side laptop comparisons</li>
+            <li>Instant answers on returns, warranty and shipping</li>
+          </ul>
+        </div>
+        <span />
+      </aside>
+      <div className="auth-panel">
       <form className="auth-card" onSubmit={submit}>
-        <div className="auth-brand"><div className="brand-icon"><Laptop size={21} /></div><span>VoltKart</span></div>
-        <h2>{mode === 'login' ? 'Welcome back' : 'Create your account'}</h2>
+<img className="brand-logo" src={logo} alt="VoltKart" height={50} width={50}/>       <h2>{mode === 'login' ? 'Welcome back' : 'Create your account'}</h2>
         <p className="auth-sub">
           {mode === 'login' ? 'Sign in to use the shopping assistant.' : 'Sign up to start chatting with the assistant.'}
         </p>
@@ -60,6 +73,7 @@ export default function Login() {
           {mode === 'login' ? 'New here? Create an account' : 'Already have an account? Sign in'}
         </button>
       </form>
+      </div>
     </div>
   )
 }

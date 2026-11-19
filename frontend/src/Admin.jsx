@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Package, FileText, FileUp, Trash2, MessageSquare, LogOut, Laptop } from 'lucide-react'
 import api, { errorMessage } from './api'
 import { useAuth } from './auth'
+import logo from "./assets/logo.png";
 
 const PRODUCT_FIELDS = [
   ['product_name', 'Product name', 'text'],
@@ -269,7 +270,7 @@ function PoliciesTab({ notify }) {
   )
 }
 
-export default function Admin({ onOpenChat }) {
+export default function Admin({ onOpenChat, onOpenStore }) {
   const { user, logout } = useAuth()
   const [tab, setTab] = useState('products')
   const [notice, setNotice] = useState(null)
@@ -282,10 +283,18 @@ export default function Admin({ onOpenChat }) {
   return (
     <div className="admin-shell">
       <header className="admin-top">
-        <div className="brand dark"><div className="brand-icon"><Laptop size={21} /></div><span>VoltKart Admin</span></div>
+        <div className="brand dark">
+          <img className="brand-logo" src={logo} alt="VoltKart" height={40} width={40}/>
+          <span>VoltKart Admin</span>
+        </div>
         <div className="admin-actions">
           <span className="admin-user">{user.email}</span>
-          <button className="ghost-btn" onClick={onOpenChat}><MessageSquare size={15} /> Open chat</button>
+          {onOpenStore && (
+            <button className="ghost-btn" onClick={onOpenStore}>
+              <Laptop size={15} /> Storefront
+            </button>
+          )}
+          <button className="ghost-btn" onClick={onOpenChat}><MessageSquare size={15} /> Open assistant</button>
           <button className="ghost-btn" onClick={logout}><LogOut size={15} /> Sign out</button>
         </div>
       </header>
