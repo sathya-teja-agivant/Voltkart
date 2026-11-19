@@ -1,11 +1,16 @@
+import logging
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from uuid import UUID
+
 from app.database.connection import get_db
 from app.models import Conversation
 from app.schemas import ChatRequest
-from app.services.groq_service import GroqService
 from app.services.assistant import handle_chat
+from app.services.groq_service import GroqService
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/chat", tags=["AI Assistant"])
 groq_service = GroqService()
@@ -26,6 +31,11 @@ def send_message(payload: ChatRequest, db: Session = Depends(get_db)):
 
     try:
         return handle_chat(db, groq_service, conversation, payload.message)
-    except Exception as exc:
+    except Exception:
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Unable to process message: {str(exc)}")
+        # Log the real error; never return internals to the browser.
+        logger.exception("handle_chat failed")
+        raise HTTPException(
+            status_code=500,
+            detail="Sorry, something went wrong while processing your message. Please try again.",
+        )

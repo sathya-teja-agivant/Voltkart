@@ -1,7 +1,9 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from uuid import UUID
+
 from app.database.connection import get_db
 from app.models import Conversation, Message
 from app.schemas import ConversationCreate
@@ -31,7 +33,18 @@ def get_messages(conversation_id: UUID, db: Session = Depends(get_db)):
     if not conversation or conversation.user_key != DEMO_USER:
         raise HTTPException(status_code=404, detail="Conversation not found")
     rows = db.scalars(select(Message).where(Message.conversation_id == conversation_id).order_by(Message.created_at)).all()
-    return [{"message_id": str(m.message_id), "sender_type": m.sender_type, "message_type": m.message_type, "message_content": m.message_content, "created_at": m.created_at} for m in rows]
+    return [
+        {
+            "message_id": str(m.message_id),
+            "sender_type": m.sender_type,
+            "message_type": m.message_type,
+            "message_content": m.message_content,
+            # products + comparison table shown with this message
+            "payload": m.payload,
+            "created_at": m.created_at,
+        }
+        for m in rows
+    ]
 
 
 @router.delete("/{conversation_id}")
