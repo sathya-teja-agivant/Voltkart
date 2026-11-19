@@ -11,7 +11,7 @@ Watch a quick walkthrough of VoltKart: [Demo Video](https://drive.google.com/fil
 
 ---
 ##  Presentation
-Understand a quick walkthrough of VoltKart: [Demo Presentation](https://docs.google.com/presentation/d/14xzo6pwmdEVW_YsRfpiFXSG5-b86j4S7/edit?usp=sharing&ouid=112291766809407717646&rtpof=true&sd=true)
+Understand what VoltKart is all about: [Demo Presentation](https://docs.google.com/presentation/d/14xzo6pwmdEVW_YsRfpiFXSG5-b86j4S7/edit?usp=sharing&ouid=112291766809407717646&rtpof=true&sd=true)
 
 ---
 
